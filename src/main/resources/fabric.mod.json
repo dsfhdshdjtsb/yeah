@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "com.dsfhdshdjtsb.doors.Doors"
+    ],
+    "client": [
+      "com.dsfhdshdjtsb.doors.Registry.DoorsClient"
     ]
   },
   "mixins": [
