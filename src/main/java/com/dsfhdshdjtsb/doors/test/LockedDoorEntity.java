@@ -1,7 +1,8 @@
 package com.dsfhdshdjtsb.doors.test;
 
-import com.dsfhdshdjtsb.doors.blocks.ImplementedInventory;
 import com.dsfhdshdjtsb.doors.Registry.ModBlocks;
+import com.dsfhdshdjtsb.doors.blocks.ImplementedInventory;
+import com.dsfhdshdjtsb.doors.Doors;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,15 +16,13 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 
-public class BoxBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
+public class LockedDoorEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
-    public BoxBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlocks.BOX_BLOCK_ENTITY, pos, state);
+    public LockedDoorEntity(BlockPos pos, BlockState state) {
+        super(ModBlocks.LOCKED_DOOR_ENTITY, pos, state);
     }
 
 
@@ -44,7 +43,7 @@ public class BoxBlockEntity extends BlockEntity implements NamedScreenHandlerFac
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         //We provide *this* to the screenHandler as our class Implements Inventory
         //Only the Server has the Inventory at the start, this will be synced to the client in the ScreenHandler
-        return new BoxScreenHandler(syncId, playerInventory, this);
+        return new LockedDoorScreenHandler(syncId, playerInventory, this);
     }
 
     @Override

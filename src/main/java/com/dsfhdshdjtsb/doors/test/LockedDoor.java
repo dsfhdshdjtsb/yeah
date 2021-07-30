@@ -1,6 +1,5 @@
-package com.dsfhdshdjtsb.doors.blocks;
+package com.dsfhdshdjtsb.doors.test;
 
-import com.dsfhdshdjtsb.doors.test.BoxBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,26 +13,32 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class LockedDoor extends DoorBlock implements BlockEntityProvider{
-    private int getOpenSoundEventId() {
-        return this.material == Material.METAL ? 1011 : 1012;
-    }
+public class LockedDoor extends DoorBlock implements BlockEntityProvider {
 
-    private int getCloseSoundEventId() {
-        return this.material == Material.METAL ? 1005 : 1006;
-    }
 
     public LockedDoor(Settings settings) {
         super(settings);
     }
+
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new LockedDoorEntity(pos, state);
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public BlockRenderType getRenderType(BlockState state) {
+        //With inheriting from BlockWithEntity this defaults to INVISIBLE, so we need to change that!
+        return BlockRenderType.MODEL;
+    }
 
+    @Nullable
+    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        return blockEntity instanceof NamedScreenHandlerFactory ? (NamedScreenHandlerFactory)blockEntity : null;
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
             //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity casted to
             //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
@@ -48,27 +53,13 @@ public class LockedDoor extends DoorBlock implements BlockEntityProvider{
     }
 
 
-        /*
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-
-        if (blockEntity instanceof LockedDoorEntity) {
-            if (!((LockedDoorEntity) blockEntity).contains(player.getName().asString().hashCode())) {
-                if(world.isClient)
-                    MinecraftClient.getInstance().setScreen(new LockedDoorScreen(new LockedDoorGui()));
-                return ActionResult.PASS;
-            } else {
-                state = (BlockState) state.cycle(OPEN);
-                world.setBlockState(pos, state, 10);
-                world.syncWorldEvent(player, (Boolean) state.get(OPEN) ? this.getCloseSoundEventId() : this.getOpenSoundEventId(), pos, 0);
-                return ActionResult.success(world.isClient);
-            }
-        }*/
-        @Override
+    //This method will drop all items onto the ground when the block is broken
+    @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof BoxBlockEntity) {
-                ItemScatterer.spawn(world, pos, (BoxBlockEntity)blockEntity);
+            if (blockEntity instanceof LockedDoorEntity) {
+                ItemScatterer.spawn(world, pos, (LockedDoorEntity)blockEntity);
                 // update comparators
                 world.updateComparators(pos,this);
             }
@@ -85,11 +76,4 @@ public class LockedDoor extends DoorBlock implements BlockEntityProvider{
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
     }
-
-    @Nullable
-    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        return blockEntity instanceof NamedScreenHandlerFactory ? (NamedScreenHandlerFactory)blockEntity : null;
-    }
-
 }
