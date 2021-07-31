@@ -1,4 +1,4 @@
-package com.dsfhdshdjtsb.doors.test;
+package com.dsfhdshdjtsb.doors.blocks;
 
 import com.dsfhdshdjtsb.doors.Registry.ModBlocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -6,31 +6,37 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ArrayPropertyDelegate;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 public class LockedDoorScreenHandler extends ScreenHandler {
     private final Inventory inventory;
+    PropertyDelegate propertyDelegate;
 
     //This constructor gets called on the client when the server wants it to open the screenHandler,
     //The client will call the other constructor with an empty Inventory and the screenHandler will automatically
     //sync this empty inventory with the inventory on the server.
     public LockedDoorScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(9));
+        this(syncId, playerInventory, new SimpleInventory(9), new ArrayPropertyDelegate(1));
     }
 
     //This constructor gets called from the BlockEntity on the server without calling the other constructor first, the server knows the inventory of the container
     //and can therefore directly provide it as an argument. This inventory will then be synced to the client.
-    public LockedDoorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+    public LockedDoorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(ModBlocks.LOCKED_DOOR_SCREEN_HANDLER, syncId);
         checkSize(inventory, 9);
         this.inventory = inventory;
+        this.propertyDelegate = propertyDelegate;
         //some inventories do custom logic when a player opens it.
         inventory.onOpen(playerInventory.player);
 
+        //we need to tell the screenhandler about our propertyDelegate, otherwise it will not sync the data inside.
+        this.addProperties(propertyDelegate);
         //This will place the slot in the correct locations for a 3x3 Grid. The slots exist on both server and client!
         //This will not render the background of the slots however, this is the Screens job
-        int m;
+        /*int m;
         int l;
         //Our inventory
         for (m = 0; m < 3; ++m) {
@@ -47,15 +53,20 @@ public class LockedDoorScreenHandler extends ScreenHandler {
         //The player Hotbar
         for (m = 0; m < 9; ++m) {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
-        }
+        }*/
 
+    }
+
+    //we provide this getter for the synced integer so the Screen can access this to show it on screen
+    public int getSyncedNumber(){
+        return propertyDelegate.get(0);
     }
 
     @Override
     public boolean canUse(PlayerEntity player) {
         return this.inventory.canPlayerUse(player);
     }
-
+/*
     // Shift + Player Inv Slot
     @Override
     public ItemStack transferSlot(PlayerEntity player, int invSlot) {
@@ -80,5 +91,5 @@ public class LockedDoorScreenHandler extends ScreenHandler {
         }
 
         return newStack;
-    }
+    }*/
 }

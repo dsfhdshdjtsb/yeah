@@ -1,9 +1,9 @@
 package com.dsfhdshdjtsb.doors.Registry;
 
 import com.dsfhdshdjtsb.doors.Doors;
-import com.dsfhdshdjtsb.doors.test.LockedDoor;
-import com.dsfhdshdjtsb.doors.test.LockedDoorEntity;
-import com.dsfhdshdjtsb.doors.test.LockedDoorScreenHandler;
+import com.dsfhdshdjtsb.doors.blocks.LockedDoor;
+import com.dsfhdshdjtsb.doors.blocks.LockedDoorEntity;
+import com.dsfhdshdjtsb.doors.blocks.LockedDoorScreenHandler;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -13,7 +13,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.BlockSoundGroup;

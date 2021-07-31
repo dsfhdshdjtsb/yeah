@@ -1,4 +1,4 @@
-package com.dsfhdshdjtsb.doors.test;
+package com.dsfhdshdjtsb.doors.blocks;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -12,9 +12,12 @@ import net.minecraft.util.Identifier;
 public class LockedDoorScreen extends HandledScreen<ScreenHandler> {
     //A path to the gui texture. In this example we use the texture from the dispenser
     private static final Identifier TEXTURE = new Identifier("minecraft", "textures/gui/container/dispenser.png");
+    private static final Identifier RECIPE_BUTTON_TEXTURE = new Identifier("minecraft","textures/gui/recipe_button.png");
+    LockedDoorScreenHandler screenHandler;
 
     public LockedDoorScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
+        screenHandler = (LockedDoorScreenHandler) handler;
     }
 
     @Override
@@ -24,11 +27,12 @@ public class LockedDoorScreen extends HandledScreen<ScreenHandler> {
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
-        drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+        //drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        textRenderer.draw(matrices, Integer.toString(screenHandler.getSyncedNumber()), 0, 0, 65280);
         renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
         drawMouseoverTooltip(matrices, mouseX, mouseY);

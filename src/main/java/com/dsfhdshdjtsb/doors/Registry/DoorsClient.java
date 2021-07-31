@@ -1,7 +1,6 @@
 package com.dsfhdshdjtsb.doors.Registry;
 
-import com.dsfhdshdjtsb.doors.Doors;
-import com.dsfhdshdjtsb.doors.test.LockedDoorScreen;
+import com.dsfhdshdjtsb.doors.blocks.LockedDoorScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 

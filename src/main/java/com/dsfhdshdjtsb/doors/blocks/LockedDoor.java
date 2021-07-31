@@ -1,4 +1,4 @@
-package com.dsfhdshdjtsb.doors.test;
+package com.dsfhdshdjtsb.doors.blocks;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
